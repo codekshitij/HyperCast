@@ -1,0 +1,15 @@
+{
+  "sequence_length": 4,
+  "forecast_horizon": 4,
+  "n_features": 6,
+  "feature_columns": [
+    "temperature",
+    "humidity",
+    "hour_sin",
+    "hour_cos",
+    "day_sin",
+    "day_cos"
+  ],
+  "train_samples": 4,
+  "val_samples": 2
+}

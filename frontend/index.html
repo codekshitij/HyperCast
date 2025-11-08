@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-Driven Hyper-Local Weather Forecasting">
+    <meta name="theme-color" content="#667eea">
+    <title>WeatherAI - Hyper-Local Weather Forecasting</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles-enhanced.css">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛅</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' fill='%23667eea'/><text x='50%' y='50%' text-anchor='middle' dy='.35em' font-size='90'>⛅</text></svg>">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="background-animation">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <!-- Weather Particles -->
+    <div class="weather-particles" id="weatherParticles"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header fade-in">
+            <div class="logo">
+                <span class="logo-icon">⛅</span>
+                <span class="logo-text">Weather<span class="logo-highlight">AI</span></span>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn" id="aboutBtn">About</button>
+                <div class="theme-toggle" id="themeToggle" role="button" aria-label="Toggle dark mode" title="Toggle dark mode" tabindex="0">
+                    <div class="theme-toggle-slider">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </div>
+                </div>
+                <button class="nav-btn" id="settingsBtn" title="Settings" aria-label="Settings">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6m-9-9h6m6 0h6"></path>
+                    </svg>
+                </button>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero fade-in-up">
+            <h1 class="hero-title">
+                Hyper-Local Weather
+                <span class="gradient-text">Powered by AI</span>
+            </h1>
+            <p class="hero-subtitle">
+                Advanced weather forecasting using custom LSTM models and real-time satellite data
+            </p>
+        </section>
+
+        <!-- Search Section -->
+        <section class="search-section slide-in">
+            <div class="search-container">
+                <div class="search-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </div>
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Search for any location... (e.g., 'beach near goa' or 'dilli')"
+                    autocomplete="off"
+                />
+                <button class="search-btn" id="searchBtn">
+                    <span class="btn-text">Search</span>
+                    <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14m-7-7 7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="search-suggestions" id="suggestions"></div>
+        </section>
+
+        <!-- Weather Display -->
+        <section class="weather-section" id="weatherSection">
+            <!-- Loading State -->
+            <div class="loading-state" id="loadingState">
+                <div class="loader"></div>
+                <p>Analyzing weather patterns...</p>
+            </div>
+
+            <!-- Weather Card -->
+            <div class="weather-card" id="weatherCard">
+                <div class="weather-header">
+                    <div class="location-info">
+                        <h2 class="location-name" id="locationName">San Francisco, CA</h2>
+                        <p class="location-coords" id="locationCoords">37.7749°N, 122.4194°W</p>
+                    </div>
+                    <button class="favorite-btn" id="favoriteBtn" title="Add to favorites" aria-label="Add to favorites">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="weather-main">
+                    <div class="temperature-display">
+                        <div class="temp-value" id="temperature">72</div>
+                        <div class="temp-unit">°F</div>
+                    </div>
+                    <div class="weather-icon" id="weatherIcon">
+                        <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </div>
+                    <div class="weather-description">
+                        <h3 id="weatherCondition">Sunny</h3>
+                        <p id="weatherDetail">Clear skies throughout the day</p>
+                    </div>
+                </div>
+
+                <div class="weather-details">
+                    <div class="detail-item">
+                        <div class="detail-icon">💧</div>
+                        <div class="detail-content">
+                            <span class="detail-label">Humidity</span>
+                            <span class="detail-value" id="humidity">65%</span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon">💨</div>
+                        <div class="detail-content">
+                            <span class="detail-label">Wind Speed</span>
+                            <span class="detail-value" id="windSpeed">12 mph</span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon">🌡️</div>
+                        <div class="detail-content">
+                            <span class="detail-label">Feels Like</span>
+                            <span class="detail-value" id="feelsLike">70°F</span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon">👁️</div>
+                        <div class="detail-content">
+                            <span class="detail-label">Visibility</span>
+                            <span class="detail-value" id="visibility">10 mi</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Forecast Section -->
+                <div class="forecast-section">
+                    <h3 class="forecast-title">7-Day Forecast</h3>
+                    <div class="forecast-grid" id="forecastGrid">
+                        <!-- Forecast items will be dynamically inserted -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div class="error-state" id="errorState">
+                <div class="error-icon">⚠️</div>
+                <h3>Oops! Something went wrong</h3>
+                <p id="errorMessage">Unable to fetch weather data. Please try again.</p>
+                <button class="retry-btn" id="retryBtn">Retry</button>
+            </div>
+        </section>
+
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2025 WeatherAI - Powered by LSTM Neural Networks</p>
+            <p class="footer-note">Data from NOAA GFS, EUMETSAT, and local sensor networks</p>
+        </footer>
+    </div>
+
+    <!-- Modal for About -->
+    <div class="modal" id="aboutModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeAbout">&times;</button>
+            <h2>About WeatherAI</h2>
+            <p>WeatherAI is an advanced weather forecasting system that doesn't rely on traditional weather APIs. Instead, it generates its own predictions using custom-trained LSTM neural networks.</p>
+            
+            
+            <h3 class="modal-subtitle">Powered By</h3>
+            <ul>
+                <li>Historical weather data</li>
+                <li>Real-time satellite imagery (NOAA GFS, EUMETSAT)</li>
+                <li>Local sensor networks</li>
+                <li>Advanced natural language processing</li>
+            </ul>
+            
+            <p class="modal-mission">Our mission is to provide the most accurate, hyper-local weather forecasts available anywhere.</p>
+        </div>
+    </div>
+
+    <!-- Connection Status Indicator -->
+    <div class="connection-status" id="connectionStatus">
+        <div class="connection-status-dot"></div>
+        <div class="connection-status-text">Online</div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
+
