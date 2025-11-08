@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+*.pyc
+
+# Data files
+data/raw/
+data/processed/
+*.grb2
+*.grib
+*.parquet
+*.npy
+*.pkl
+
+# ML models
+services/ml/models/checkpoints/
+
+# Logs
+*.log
+/tmp/
+
+# IDE
+.vscode/
+.idea/
+
+# System
+.DS_Store
+
+# Keep only frontend for Vercel
+services/
+data/
+infrastructure/
+

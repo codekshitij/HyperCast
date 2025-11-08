@@ -1,7 +1,10 @@
 // ===================================
 // Configuration & Constants
 // ===================================
-const API_BASE_URL = 'http://localhost:8000'; // Backend API endpoint
+// API Configuration - Auto-detect environment
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8000'  // Local development
+    : 'https://your-api-url.com';  // Production API (update this after deploying API)
 const WEATHER_ICONS = {
     sunny: `<svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
         <circle cx="12" cy="12" r="5"></circle>
